@@ -40,6 +40,7 @@ app.intent('Default Welcome Intent', (conv) => {
   setUpGlobals(conv);
   let session = conv.data.mySession;
   session.lastPrompt = "Hi, I'm your Anime Home. I can tell you what anime is airing today. How can I help you?";
+  console.log(conv);
   conv.ask(session.lastPrompt);
 });
 
@@ -49,10 +50,11 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Today Intent', (conv) => {
-  let session = conv.data.mySession;
-  console.log(conv);
-  session.lastPrompt = "Today we are airing something.";
-  conv.ask(session.lastPrompt);
+  return getShowsToday(conv).then(() => {
+    let session = conv.data.mySession;
+    session.lastPrompt = "Today we are airing something.";
+    conv.ask(session.lastPrompt);
+  });
 });
 
 app.intent('Goodbye', (conv) => {
