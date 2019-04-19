@@ -52,6 +52,10 @@ app.intent('Anime Today Intent', (conv) => {
   conv.ask(session.lastPrompt);
 });
 
+app.intent('Goodbye', (conv) => {
+  conv.close("Goodbye!");
+});
+
 
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
