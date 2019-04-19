@@ -2,12 +2,9 @@ const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
 
-const langFileEN = require('./scripts/lang.en');
-
 process.env.DEBUG = 'dialogflow:debug'; 
 
 let setUpGlobals = (conv) => {
-  global.langFiles = {en: langFileEN};
   global.MAX_REPEATS = 3;
   global.MAX_PROMPTS = 3;
   global.app = app;
