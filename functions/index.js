@@ -49,7 +49,7 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Today Intent', (conv) => {
-  return api.getShowsToday(conv).then(() => {
+  return api.getShowsOn(conv).then(() => {
     let session = conv.data.mySession;
     let date = conv.request.user.lastSeen;
     console.log(session);
@@ -59,6 +59,20 @@ app.intent('Anime Today Intent', (conv) => {
     console.log(session.true);
   });
 });
+
+app.intent('Anime Anyday Intent', (conv, params) => {
+  return api.getShowsOn(conv, params.date).then(() => {
+    console.log(params.date);
+    let session = conv.data.mySession;
+    let date = conv.request.user.lastSeen;
+    console.log(session);
+    session.date = date;
+    session.lastPrompt = params.date;
+    conv.ask(session.lastPrompt);
+    console.log(session.true);
+  });
+});
+
 
 app.intent('Goodbye', (conv) => {
   conv.close("Goodbye!");
