@@ -71,15 +71,14 @@ app.intent('Anime Today Intent', (conv) => {
 });
 
 app.intent('Anime Anyday Intent', (conv, params) => {
-  return api.getShowsOn(conv, params.date).then(() => {
-    console.log(params.date);
+  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  var d = new Date(params.date);
+  var day = days[d.getDay()];
+  return jikanjs.loadSchedule(day).then((anime) => {
     let session = conv.data.mySession;
-    let date = conv.request.user.lastSeen;
-    console.log(session);
-    session.date = date;
-    session.lastPrompt = params.date;
+    session.lastPrompt = "Today we are airing bleh";
     conv.ask(session.lastPrompt);
-    console.log(session.true);
+    console.log(anime);
   });
 });
 
