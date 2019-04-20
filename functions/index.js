@@ -1,8 +1,7 @@
-import { getShowsToday } from './apiCall';
-
 const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
+const api = require('./apiCall');
 
 process.env.DEBUG = 'dialogflow:debug'; 
 
@@ -50,7 +49,7 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Today Intent', (conv) => {
-  return getShowsToday(conv).then(() => {
+  return api.getShowsToday(conv).then(() => {
     let session = conv.data.mySession;
     session.lastPrompt = "Today we are airing something.";
     conv.ask(session.lastPrompt);

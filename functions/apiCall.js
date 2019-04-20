@@ -1,24 +1,16 @@
-import { request } from "https";
+var URL_BASE = "https://api.jikan.moe"
 
 function getShowsToday(conv) {
     return new Promise((resolve, reject) => {
         var request = require("request");
-        var options = {
-            "method": "GET",
-            "hostname": [
-                "api",
-                "jikan",
-                "moe"
-            ],
-            "path": [
-                "v3",
-                "schedule",
-                "monday"
-            ],
-            "headers": {
-                "cache-control": "no-cache",
-                "Postman-Token": "b96fe673-8970-4d14-a16f-cc86811a486e"
-            }
+        var path = "/v3/schedule/monday"
+        var url = URL_BASE + path;
+        var options = { 
+        method: 'GET',
+        url: url,
+        headers: 
+            { 'Postman-Token': 'd9846809-881d-4dac-929f-6e57266cdc61',
+                'cache-control': 'no-cache' } 
         };
         request(options, function (error, response, body){
             if(error) {
@@ -34,4 +26,4 @@ function getShowsToday(conv) {
     });
 }
 
-export { getShowsToday };
+module.exports.getShowsToday = getShowsToday;
