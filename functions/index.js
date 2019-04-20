@@ -2,6 +2,7 @@ const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
 const api = require('./apiCall');
+const jikanjs = require('jikanjs');
 
 process.env.DEBUG = 'dialogflow:debug'; 
 
@@ -49,15 +50,24 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Today Intent', (conv) => {
-  return api.getShowsOn(conv).then(() => {
+  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  var d = new Date();
+  var day = days[d.getDay()];
+  return jikanjs.loadSchedule(day).then((anime) => {
     let session = conv.data.mySession;
-    let date = conv.request.user.lastSeen;
-    console.log(session);
-    session.date = date;
-    session.lastPrompt = "Today we are airing something.";
+    session.lastPrompt = "Today we are airing bleh";
     conv.ask(session.lastPrompt);
-    console.log(session.true);
+    console.log(anime);
   });
+  // return api.getShowsOn(conv).then(() => {
+  //   let session = conv.data.mySession;
+  //   let date = conv.request.user.lastSeen;
+  //   console.log(session);
+  //   session.date = date;
+  //   session.lastPrompt = "Today we are airing something.";
+  //   conv.ask(session.lastPrompt);
+  //   console.log(session.true);
+  // });
 });
 
 app.intent('Anime Anyday Intent', (conv, params) => {

@@ -1,3 +1,4 @@
+const jikanjs = require('jikanjs');
 var URL_BASE = "https://api.jikan.moe"
 
 function getShowsOn(conv, date=null) {
@@ -22,6 +23,7 @@ function getShowsOn(conv, date=null) {
                 reject(error);
             } else {
                 console.log(body);
+                console.log(body.saturday);
                 conv.data.mySession.true = 3;
                 resolve();
             }
