@@ -39,7 +39,7 @@ app.intent('Default Welcome Intent', (conv) => {
   setUpGlobals(conv);
   let session = conv.data.mySession;
   session.lastPrompt = "Hi, I'm your Anime Home. I can tell you what anime is airing today. How can I help you?";
-  console.log(conv);
+  console.log(conv.request.user.lastSeen);
   conv.ask(session.lastPrompt);
 });
 

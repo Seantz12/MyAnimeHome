@@ -1,28 +1,32 @@
-[debug] [2019-04-19T22:48:42.175Z] ----------------------------------------------------------------------
-[debug] [2019-04-19T22:48:42.177Z] Command:       /usr/bin/node /usr/bin/firebase serve --only functions
-[debug] [2019-04-19T22:48:42.177Z] CLI Version:   6.7.0
-[debug] [2019-04-19T22:48:42.177Z] Platform:      linux
-[debug] [2019-04-19T22:48:42.177Z] Node Version:  v11.14.0
-[debug] [2019-04-19T22:48:42.177Z] Time:          Fri Apr 19 2019 18:48:42 GMT-0400 (Eastern Daylight Time)
-[debug] [2019-04-19T22:48:42.177Z] ----------------------------------------------------------------------
+[debug] [2019-04-20T22:21:03.852Z] ----------------------------------------------------------------------
+[debug] [2019-04-20T22:21:03.854Z] Command:       /usr/bin/node /usr/bin/firebase serve --only functions
+[debug] [2019-04-20T22:21:03.854Z] CLI Version:   6.7.0
+[debug] [2019-04-20T22:21:03.854Z] Platform:      linux
+[debug] [2019-04-20T22:21:03.854Z] Node Version:  v11.14.0
+[debug] [2019-04-20T22:21:03.854Z] Time:          Sat Apr 20 2019 18:21:03 GMT-0400 (Eastern Daylight Time)
+[debug] [2019-04-20T22:21:03.854Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2019-04-19T22:48:42.182Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2019-04-19T22:48:42.182Z] > authorizing via signed-in user
-[debug] [2019-04-19T22:48:42.183Z] [iam] checking project myanimehome-1823b for permissions ["firebase.projects.get"]
-[debug] [2019-04-19T22:48:42.184Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/myanimehome-1823b:testIamPermissions  
+[debug] [2019-04-20T22:21:03.859Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-04-20T22:21:03.859Z] > authorizing via signed-in user
+[debug] [2019-04-20T22:21:03.859Z] [iam] checking project myanimehome-1823b for permissions ["firebase.projects.get"]
+[debug] [2019-04-20T22:21:03.860Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-04-20T22:21:03.860Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-04-20T22:21:04.142Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-20T22:21:04.158Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/myanimehome-1823b:testIamPermissions  
 
-[debug] [2019-04-19T22:48:42.769Z] <<< HTTP RESPONSE 200
-[debug] [2019-04-19T22:48:42.777Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/myanimehome-1823b  
+[debug] [2019-04-20T22:21:09.657Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-20T22:21:09.663Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/myanimehome-1823b  
  
-[debug] [2019-04-19T22:48:43.096Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-20T22:21:10.028Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Serving from '/home/seantz12/Projects/MyAnimeHome'...
 [info] 
 [info] i  functions: Preparing to emulate functions.
-[debug] [2019-04-19T22:48:43.500Z] Fetching environment
-[debug] [2019-04-19T22:48:43.501Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/600637884199:getServerAppConfig  
+[debug] [2019-04-20T22:21:10.366Z] Fetching environment
+[debug] [2019-04-20T22:21:10.368Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/600637884199:getServerAppConfig  
  
-[debug] [2019-04-19T22:48:43.701Z] <<< HTTP RESPONSE 200
-[debug] [2019-04-19T22:48:43.702Z] Starting @google-cloud/functions-emulator
-[debug] [2019-04-19T22:48:44.747Z] Parsing function triggers
+[debug] [2019-04-20T22:21:10.673Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-20T22:21:10.675Z] Starting @google-cloud/functions-emulator
+[debug] [2019-04-20T22:21:11.734Z] Parsing function triggers
 [info] ✔  functions: dialogflowFirebaseFulfillment: http://localhost:5000/myanimehome-1823b/us-central1/dialogflowFirebaseFulfillment

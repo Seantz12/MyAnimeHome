@@ -19,7 +19,6 @@ function getShowsToday(conv) {
                 console.log('first is body, second is response');
                 console.log(body);
                 console.log('-----------------------------------');
-                console.log(response);
                 resolve();
             }
         });
