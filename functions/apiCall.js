@@ -20,8 +20,14 @@ function getShowsToday(conv) {
             if(error) {
                 reject(error);
             } else {
-                console.log(body);
-                conv.data.mySession.true = 3;
+                try {
+                    JSON.parse(body);
+                } catch (e) {
+                    console.log("bad");
+                    return false;
+                }
+                let newbody = JSON.stringify(body, null, " ");
+                console.log(newbody);
                 resolve();
             }
         });

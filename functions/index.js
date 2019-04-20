@@ -39,7 +39,6 @@ app.intent('Default Welcome Intent', (conv) => {
   setUpGlobals(conv);
   let session = conv.data.mySession;
   session.lastPrompt = "Hi, I'm your Anime Home. I can tell you what anime is airing today. How can I help you?";
-  console.log(conv.request.user.lastSeen);
   conv.ask(session.lastPrompt);
 });
 
@@ -52,11 +51,9 @@ app.intent('Anime Today Intent', (conv) => {
   return api.getShowsToday(conv).then(() => {
     let session = conv.data.mySession;
     let date = conv.request.user.lastSeen;
-    console.log(session);
     session.date = date;
     session.lastPrompt = "Today we are airing something.";
     conv.ask(session.lastPrompt);
-    console.log(session.true);
   });
 });
 
