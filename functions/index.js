@@ -51,8 +51,12 @@ app.intent('Repeat Intent', (conv) => {
 app.intent('Anime Today Intent', (conv) => {
   return api.getShowsToday(conv).then(() => {
     let session = conv.data.mySession;
+    let date = conv.request.user.lastSeen;
+    console.log(session);
+    session.date = date;
     session.lastPrompt = "Today we are airing something.";
     conv.ask(session.lastPrompt);
+    console.log(session.true);
   });
 });
 

@@ -3,7 +3,11 @@ var URL_BASE = "https://api.jikan.moe"
 function getShowsToday(conv) {
     return new Promise((resolve, reject) => {
         var request = require("request");
-        var path = "/v3/schedule/monday"
+        // let date = conv.request.user.lastSeen;
+        var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        var d = new Date();
+        var day = days[d.getDay()];
+        var path = "/v3/schedule/" + day;
         var url = URL_BASE + path;
         var options = { 
         method: 'GET',
@@ -16,9 +20,8 @@ function getShowsToday(conv) {
             if(error) {
                 reject(error);
             } else {
-                console.log('first is body, second is response');
                 console.log(body);
-                console.log('-----------------------------------');
+                conv.data.mySession.true = 3;
                 resolve();
             }
         });

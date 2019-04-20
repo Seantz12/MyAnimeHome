@@ -1,2 +1,5 @@
 commands/*
 node_modules/*
+.firebaserc
+firebase-debug.log
+firebase.json
