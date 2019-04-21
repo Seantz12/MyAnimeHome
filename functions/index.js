@@ -89,9 +89,12 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
 
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
   return jikanjs.search('anime', params.showName).then((results) => {
-    console.log(params.showName);
-    console.log(results);
-    session.lastPrompt = params.showName;
+    show = results.results[0];
+    var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    var d = new Date(show.start_date);
+    var day = days[(d.getDay() + 1) % 7]; // Date returns midnight so day is one behind
+    let session = conv.data.mySession;
+    session.lastPrompt = day;
     conv.ask(session.lastPrompt);
   });
 });
