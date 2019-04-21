@@ -62,6 +62,7 @@ app.intent('Anime Anyday Intent', (conv, params) => {
 });
 
 app.intent('Top Anime This Season Intent', (conv, params) => {
+  if(params.number == '') params.number = 1;
   var d = new Date();
   var month = d.getMonth();
   var year = d.getFullYear();
@@ -78,7 +79,11 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
       animeToSay += animeList[i]['title'] + ", "
     }
     animeToSay += animeList[params.number-1]['title'];
-    conv.ask('The top anime this season are: ' + animeToSay);
+    if(params.number == 1) {
+      conv.ask('The top anime this season is ' + animeToSay);
+    } else {
+      conv.ask(`The top ${params.number} anime this season are: ` + animeToSay);
+    }
   });
 
 });
