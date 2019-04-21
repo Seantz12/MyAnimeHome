@@ -78,13 +78,16 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
     for(var i = 0; i < params.number-1; i++) {
       animeToSay += animeList[i]['title'] + ", "
     }
-    animeToSay += animeList[params.number-1]['title'];
+    animeToSay += 'and ' + animeList[params.number-1]['title'];
     if(params.number == 1) {
       conv.ask('The top anime this season is ' + animeToSay);
     } else {
       conv.ask(`The top ${params.number} anime this season are: ` + animeToSay);
     }
   });
+});
+
+app.intent('When Is Anime Coming Out Intent', (conv, params) => {
 
 });
 
@@ -92,7 +95,7 @@ app.intent('Thank You Intent', (conv) => {
   let session = conv.data.mySession;
   session.lastPrompt = "You're welcome! How else can I help you?";
   conv.ask(session.lastPrompt);
-})
+});
 
 
 app.intent('Goodbye', (conv) => {
