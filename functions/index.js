@@ -2,6 +2,7 @@ const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
 const api = require('./apiCall');
+const parse = require('./parseJSON');
 const jikanjs = require('jikanjs');
 
 process.env.DEBUG = 'dialogflow:debug'; 
@@ -40,7 +41,6 @@ app.intent('Default Welcome Intent', (conv) => {
   setUpGlobals(conv);
   let session = conv.data.mySession;
   session.lastPrompt = "Hi, I'm your Anime Home. I can tell you what anime is airing today. How can I help you?";
-  console.log(conv.request.user.lastSeen);
   conv.ask(session.lastPrompt);
 });
 
@@ -49,36 +49,15 @@ app.intent('Repeat Intent', (conv) => {
   conv.ask("Sorry, let me repeat that. " + session.lastPrompt);
 });
 
-app.intent('Anime Today Intent', (conv) => {
-  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  var d = new Date();
-  var day = days[d.getDay()];
-  return jikanjs.loadSchedule(day).then((anime) => {
-    let session = conv.data.mySession;
-    session.lastPrompt = "Today we are airing bleh";
-    conv.ask(session.lastPrompt);
-    console.log(anime);
-  });
-  // return api.getShowsOn(conv).then(() => {
-  //   let session = conv.data.mySession;
-  //   let date = conv.request.user.lastSeen;
-  //   console.log(session);
-  //   session.date = date;
-  //   session.lastPrompt = "Today we are airing something.";
-  //   conv.ask(session.lastPrompt);
-  //   console.log(session.true);
-  // });
-});
-
 app.intent('Anime Anyday Intent', (conv, params) => {
   var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   var d = new Date(params.date);
   var day = days[d.getDay()];
   return jikanjs.loadSchedule(day).then((anime) => {
     let session = conv.data.mySession;
-    session.lastPrompt = "Today we are airing bleh";
+    parse.parseJSON(conv, day, anime);
+    session.lastPrompt = "Today we are airing " + session.animeList;
     conv.ask(session.lastPrompt);
-    console.log(anime);
   });
 });
 
@@ -103,6 +82,12 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
   });
 
 });
+
+app.intent('Thank You Intent', (conv) => {
+  let session = conv.data.mySession;
+  session.lastPrompt = "You're welcome! How else can I help you?";
+  conv.ask(session.lastPrompt);
+})
 
 
 app.intent('Goodbye', (conv) => {

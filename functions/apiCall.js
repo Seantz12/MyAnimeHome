@@ -22,9 +22,14 @@ function getShowsOn(conv, date=null) {
             if(error) {
                 reject(error);
             } else {
-                console.log(body);
-                console.log(body.saturday);
-                conv.data.mySession.true = 3;
+                try {
+                    JSON.parse(body);
+                } catch (e) {
+                    console.log("bad");
+                    return false;
+                }
+                let newbody = JSON.stringify(body, null, " ");
+                console.log(newbody);
                 resolve();
             }
         });
