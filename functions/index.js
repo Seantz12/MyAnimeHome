@@ -51,7 +51,7 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Anyday Intent', (conv, params) => {
-  return jikanjs.loadSchedule(dateHelper.getWeekyday(params.date)).then((results) => {
+  return jikanjs.loadSchedule(dateHelper.getWeekday(params.date)).then((results) => {
     let session = conv.data.mySession;
     session.lastPrompt = "Today we are airing " + parse.getShowsOnDate(params.date, results) + ".";
     conv.ask(session.lastPrompt);
@@ -59,21 +59,15 @@ app.intent('Anime Anyday Intent', (conv, params) => {
 });
 
 app.intent('Top Anime This Season Intent', (conv, params) => {
-  if(params.number == '') params.number = 1;
-  return jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason()).then((allAnime) => {
+  return jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason()).then((results) => {
     let session = conv.data.mySession;
-    animeList = allAnime.anime;
-    animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
-    var animeToSay = ""
-    for(var i = 0; i < params.number-1; i++) {
-      animeToSay += animeList[i]['title'] + ", "
-    }
-    animeToSay += 'and ' + animeList[params.number-1]['title'];
+    if(params.number == '') params.number = 1;
     if(params.number == 1) {
-      session.lastPrompt = 'The top anime this season is ' + animeToSay;
+      session.lastPrompt = 'The top anime this season is ';
     } else {
-      session.lastPrompt = `The top ${params.number} anime this season are: ` + animeToSay;
+      session.lastPrompt = `The top ${params.number} anime this season are: `;
     }
+    session.lastPrompt += parse.getShowsOnSeason(params.number, results) + ".";
     conv.ask(session.lastPrompt);
   });
 });
