@@ -82,6 +82,28 @@ app.intent('Anime Anyday Intent', (conv, params) => {
   });
 });
 
+app.intent('Top Anime This Season Intent', (conv, params) => {
+  var d = new Date();
+  var month = d.getMonth();
+  var year = d.getFullYear();
+  var season = "";
+  if(month >= 0 && month <= 2) season = "winter";
+  else if(month >= 3 && month <= 5) season = "spring";
+  else if(month >= 6 && month <= 8) season = "summer";
+  else if(month >= 9 && month <= 11) season = "fall";
+  return jikanjs.loadSeason(year, season).then((allAnime) => {
+    animeList = allAnime.anime;
+    animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
+    var animeToSay = ""
+    for(var i = 0; i < params.number; i++) {
+      animeToSay += animeList[i]['title'] + ", "
+      console.log(animeList[i]['title']);
+    }
+    conv.ask('The top anime this season are: ' + animeToSay);
+  });
+
+});
+
 
 app.intent('Goodbye', (conv) => {
   conv.close("Goodbye!");
