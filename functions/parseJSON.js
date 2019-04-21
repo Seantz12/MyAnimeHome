@@ -1,8 +1,8 @@
 const dateHelper = require('./getDate');
 
 function getShowsOnDate(date, file) {
-    var len = file[day].length;
     var day = dateHelper.getWeekyday(date);
+    var len = file[day].length;
     var dateList = "";
     for(var i = 0; i < len - 1; i++) {
         dateList += file[day][i]["title"] + ", ";

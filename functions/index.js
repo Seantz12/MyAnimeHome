@@ -53,7 +53,7 @@ app.intent('Repeat Intent', (conv) => {
 app.intent('Anime Anyday Intent', (conv, params) => {
   return jikanjs.loadSchedule(dateHelper.getWeekyday(params.date)).then((results) => {
     let session = conv.data.mySession;
-    session.lastPrompt = "Today we are airing " + parse.getShowsOnDate(params.date, results);
+    session.lastPrompt = "Today we are airing " + parse.getShowsOnDate(params.date, results) + ".";
     conv.ask(session.lastPrompt);
   });
 });
