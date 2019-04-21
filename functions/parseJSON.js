@@ -1,11 +1,14 @@
-function parseJSON(conv, day, file) {
+const dateHelper = require('./getDate');
+
+function getShowsOnDate(date, file) {
+    var day = dateHelper.getWeekyday(date);
     var len = file[day].length;
-    conv.data.mySession.animeList = "";
+    var dateList = "";
     for(var i = 0; i < len - 1; i++) {
-        conv.data.mySession.animeList += file[day][i]["title"] + ", ";
+        dateList += file[day][i]["title"] + ", ";
     }
-    conv.data.mySession.animeList += file[day][len - 1]["title"];
-    console.log(conv.data.mySession.animeList);
+    dateList += "and " + file[day][len - 1]["title"];
+    return dateList;
 }
 
-module.exports.parseJSON = parseJSON;
+module.exports.getShowsOnDate = getShowsOnDate;
