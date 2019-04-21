@@ -2,6 +2,8 @@ const {dialogflow} = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
 const api = require('./apiCall');
+const parse = require('./parseJSON');
+const jikanjs = require('jikanjs');
 
 process.env.DEBUG = 'dialogflow:debug'; 
 
@@ -47,15 +49,24 @@ app.intent('Repeat Intent', (conv) => {
   conv.ask("Sorry, let me repeat that. " + session.lastPrompt);
 });
 
-app.intent('Anime Today Intent', (conv) => {
-  return api.getShowsToday(conv).then(() => {
+app.intent('Anime Anyday Intent', (conv, params) => {
+  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  var d = new Date(params.date);
+  var day = days[d.getDay()];
+  return jikanjs.loadSchedule(day).then((anime) => {
     let session = conv.data.mySession;
-    let date = conv.request.user.lastSeen;
-    session.date = date;
-    session.lastPrompt = "Today we are airing something.";
+    parse.parseJSON(conv, day, anime);
+    session.lastPrompt = "Today we are airing " + session.animeList;
     conv.ask(session.lastPrompt);
   });
 });
+
+app.intent('Thank You Intent', (conv) => {
+  let session = conv.data.mySession;
+  session.lastPrompt = "You're welcome! How else can I help you?";
+  conv.ask(session.lastPrompt);
+})
+
 
 app.intent('Goodbye', (conv) => {
   conv.close("Goodbye!");
