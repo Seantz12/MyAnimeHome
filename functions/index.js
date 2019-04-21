@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 const app = dialogflow();
 const api = require('./apiCall');
 const parse = require('./parseJSON');
+const dateHelper = require('./getDate');
 const jikanjs = require('jikanjs');
 
 process.env.DEBUG = 'dialogflow:debug'; 
@@ -50,28 +51,17 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Anyday Intent', (conv, params) => {
-  var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  var d = new Date(params.date);
-  var day = days[d.getDay()];
-  return jikanjs.loadSchedule(day).then((anime) => {
+  return jikanjs.loadSchedule(dateHelper.getWeekyday(params.date)).then((results) => {
     let session = conv.data.mySession;
-    parse.parseJSON(conv, day, anime);
-    session.lastPrompt = "Today we are airing " + session.animeList;
+    session.lastPrompt = "Today we are airing " + parse.getShowsOnDate(params.date, results) + ".";
     conv.ask(session.lastPrompt);
   });
 });
 
 app.intent('Top Anime This Season Intent', (conv, params) => {
   if(params.number == '') params.number = 1;
-  var d = new Date();
-  var month = d.getMonth();
-  var year = d.getFullYear();
-  var season = "";
-  if(month >= 0 && month <= 2) season = "winter";
-  else if(month >= 3 && month <= 5) season = "spring";
-  else if(month >= 6 && month <= 8) season = "summer";
-  else if(month >= 9 && month <= 11) season = "fall";
-  return jikanjs.loadSeason(year, season).then((allAnime) => {
+  return jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason()).then((allAnime) => {
+    let session = conv.data.mySession;
     animeList = allAnime.anime;
     animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
     var animeToSay = ""
@@ -80,10 +70,11 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
     }
     animeToSay += animeList[params.number-1]['title'];
     if(params.number == 1) {
-      conv.ask('The top anime this season is ' + animeToSay);
+      session.lastPrompt = 'The top anime this season is ' + animeToSay;
     } else {
-      conv.ask(`The top ${params.number} anime this season are: ` + animeToSay);
+      session.lastPrompt = `The top ${params.number} anime this season are: ` + animeToSay;
     }
+    conv.ask(session.lastPrompt);
   });
 });
 
