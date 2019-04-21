@@ -74,10 +74,10 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
     animeList = allAnime.anime;
     animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
     var animeToSay = ""
-    for(var i = 0; i < params.number; i++) {
+    for(var i = 0; i < params.number-1; i++) {
       animeToSay += animeList[i]['title'] + ", "
-      console.log(animeList[i]['title']);
     }
+    animeToSay += animeList[params.number-1]['title'];
     conv.ask('The top anime this season are: ' + animeToSay);
   });
 
