@@ -78,7 +78,7 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
     for(var i = 0; i < params.number-1; i++) {
       animeToSay += animeList[i]['title'] + ", "
     }
-    animeToSay += 'and ' + animeList[params.number-1]['title'];
+    animeToSay += animeList[params.number-1]['title'];
     if(params.number == 1) {
       conv.ask('The top anime this season is ' + animeToSay);
     } else {
@@ -88,7 +88,12 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
 });
 
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
-
+  return jikanjs.search('anime', params.showName).then((results) => {
+    console.log(params.showName);
+    console.log(results);
+    session.lastPrompt = params.showName;
+    conv.ask(session.lastPrompt);
+  });
 });
 
 app.intent('Thank You Intent', (conv) => {
