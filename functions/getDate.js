@@ -27,7 +27,7 @@ function getYear() {
     return year;
 }
 
-module.exports.getWeekyday = getWeekday;
+module.exports.getWeekday = getWeekday;
 module.exports.getAiringWeekday = getAiringWeekday;
 module.exports.getSeason = getSeason;
 module.exports.getYear = getYear;

@@ -1,7 +1,7 @@
 const dateHelper = require('./getDate');
 
 function getShowsOnDate(date, file) {
-    var day = dateHelper.getWeekyday(date);
+    var day = dateHelper.getWeekday(date);
     var len = file[day].length;
     var dateList = "";
     for(var i = 0; i < len - 1; i++) {
@@ -11,4 +11,16 @@ function getShowsOnDate(date, file) {
     return dateList;
 }
 
+function getShowsOnSeason(number, file) {
+    animeList = file.anime;
+    animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
+    var animeToSay = ""
+    for(var i = 0; i < number-1; i++) {
+      animeToSay += animeList[i]['title'] + ", "
+    }
+    animeToSay += 'and ' + animeList[number-1]['title'];
+    return animeToSay;
+}
+
 module.exports.getShowsOnDate = getShowsOnDate;
+module.exports.getShowsOnSeason = getShowsOnSeason;
