@@ -51,6 +51,9 @@ app.intent('Repeat Intent', (conv) => {
 });
 
 app.intent('Anime Anyday Intent', (conv, params) => {
+  // TODO:
+  // If param.sdate is not defined, then will cause error as day is undefined
+  // Change airing to be the day (ex. Should say "Tomorrow we are...")
   return jikanjs.loadSchedule(dateHelper.getWeekday(params.date)).then((results) => {
     let session = conv.data.mySession;
     session.lastPrompt = "Today we are airing " + parse.getShowsOnDate(params.date, results) + ".";
@@ -73,6 +76,8 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
 });
 
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
+  // TODO:
+  // Setup try/catch for search paramter of less than three characters
   return jikanjs.search('anime', params.showName).then((results) => {
     show = results.results[0];
     let session = conv.data.mySession;
