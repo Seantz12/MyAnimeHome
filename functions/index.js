@@ -73,7 +73,18 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
 });
 
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
-
+  return jikanjs.search('anime', params.showName).then((results) => {
+    show = results.results[0];
+    let session = conv.data.mySession;
+    if(show.airing == false) {
+      session.lastPrompt = "This show isn't airing this season";
+      conv.ask(session.lastPrompt);
+    } else {
+      day = dateHelper.getAiringWeekday(show.start_date);
+      session.lastPrompt = day;
+      conv.ask(`In Japan, ${show.title} airs on ` + session.lastPrompt);
+    }
+  });
 });
 
 app.intent('Thank You Intent', (conv) => {

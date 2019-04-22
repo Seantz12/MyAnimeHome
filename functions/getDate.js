@@ -4,6 +4,12 @@ function getWeekday(date) {
     return weekday[d.getDay()];
 }
 
+function getAiringWeekday(date) {
+    var weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    var d = new Date(date);
+    return weekday[(d.getDay() + 1) % 7]; // Airing day is one ahead of given value
+}
+
 function getSeason() {
     var d = new Date();
     var month = d.getMonth();
@@ -22,5 +28,6 @@ function getYear() {
 }
 
 module.exports.getWeekday = getWeekday;
+module.exports.getAiringWeekday = getAiringWeekday;
 module.exports.getSeason = getSeason;
 module.exports.getYear = getYear;
