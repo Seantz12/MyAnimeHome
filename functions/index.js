@@ -92,6 +92,15 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
   });
 });
 
+app.intent('Rating Intent', (conv, params) => {
+  return jikanjs.search('anime', params.showName).then((results) => {
+    let session = conv.data.mySession;
+    var show = results.results[0];
+    session.lastPrompt = `The show ${show.title} has a rating of ${show.score}`;
+    conv.ask(session.lastPrompt);
+  });
+});
+
 app.intent('Thank You Intent', (conv) => {
   let session = conv.data.mySession;
   session.lastPrompt = "You're welcome! How else can I help you?";
