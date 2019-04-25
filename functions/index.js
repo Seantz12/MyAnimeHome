@@ -91,20 +91,6 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
       conv.ask(session.lastPrompt);
     }
   });
-  // return jikanjs.search('anime', params.showName).then((results) => {
-  //   show = results.results[0]; 
-  //   let session = conv.data.mySession;
-  //   if(show.airing == false) {
-  //     session.lastPrompt = "This show isn't airing this season";
-  //     conv.ask(session.lastPrompt);
-  //   } else {
-  //     day = dateHelper.getAiringWeekday(show.start_date);
-  //     session.lastPrompt = day;
-  //     conv.ask(`In Japan, ${show.title} airs on ` + session.lastPrompt);
-  //   }
-  // });
-  // console.log(test);
-  // return test;
 });
 
 app.intent('Rating Intent', (conv, params) => {
