@@ -6,6 +6,7 @@ const parse = require('./parseJSON');
 const dateHelper = require('./getDate');
 const infoHelper = require('./showInfo');
 const jikanjs = require('jikanjs');
+const context = require('./context');
 
 process.env.DEBUG = 'dialogflow:debug'; 
 
@@ -100,6 +101,25 @@ app.intent('Rating Intent', (conv, params) => {
     session.lastPrompt = `The show ${show.title} has a rating of ${show.score}`;
     conv.ask(session.lastPrompt);
   });
+});
+
+app.intent('Description Intent', (conv, params) => {
+  return (infoHelper.getShowId(params.any)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
+    let session = conv.data.mySession;
+    var sen = show.synopsis.split('.');
+    session.lastPrompt = `Sure, here is synopsis for ${params.any}. ` + sen[0] + ". " + sen[1] + ". If you want to hear more, say more.";
+    conv.ask(session.lastPrompt);
+    context.setContext(conv, "Description", 1);
+  });
+});
+
+app.intent('More Description Intent', (conv, params) => {
+  return (infoHelper.getShowId(agent.context.get("Description").parameters.any)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
+    let session = conv.data.mySession;
+    var sen = show.synopsis.split('.');
+    session.lastPrompt = `Sure, here is the rest of the synopsis. ` + sen[3] + ". " + sen[3] + ".";
+    conv.ask(session.lastPrompt);
+  });  
 });
 
 app.intent('Thank You Intent', (conv) => {
