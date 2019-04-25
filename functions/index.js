@@ -4,6 +4,7 @@ const app = dialogflow();
 const api = require('./apiCall');
 const parse = require('./parseJSON');
 const dateHelper = require('./getDate');
+const infoHelper = require('./showInfo');
 const jikanjs = require('jikanjs');
 
 process.env.DEBUG = 'dialogflow:debug'; 
@@ -78,16 +79,16 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
   // TODO:
   // Setup try/catch for search paramter of less than three characters
-  return jikanjs.search('anime', params.showName).then((results) => {
-    show = results.results[0];
+  return (infoHelper.getShowId(params.showName)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
     let session = conv.data.mySession;
     if(show.airing == false) {
       session.lastPrompt = "This show isn't airing this season";
       conv.ask(session.lastPrompt);
     } else {
-      day = dateHelper.getAiringWeekday(show.start_date);
-      session.lastPrompt = day;
-      conv.ask(`In Japan, ${show.title} airs on ` + session.lastPrompt);
+      var words = show.broadcast.split(" ");
+      var day = words[0]; // Broadcast is returned as "Day at ..." so day is the first word
+      session.lastPrompt = `In Japan, ${show.title} airs on ${day}`;
+      conv.ask(session.lastPrompt);
     }
   });
 });
