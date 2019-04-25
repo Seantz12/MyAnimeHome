@@ -114,12 +114,14 @@ app.intent('Description Intent', (conv, params) => {
 });
 
 app.intent('More Description Intent', (conv, params) => {
-  return (infoHelper.getShowId(agent.context.get("Description").parameters.any)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
-    let session = conv.data.mySession;
-    var sen = show.synopsis.split('.');
-    session.lastPrompt = `Sure, here is the rest of the synopsis. ` + sen[3] + ". " + sen[3] + ".";
-    conv.ask(session.lastPrompt);
-  });  
+  console.log(conv.contexts);
+  conv.ask("hey");
+  // return (infoHelper.getShowId(Description.any)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
+  //   let session = conv.data.mySession;
+  //   var sen = show.synopsis.split('.');
+  //   session.lastPrompt = `Sure, here is the rest of the synopsis. ` + sen[3] + ". " + sen[3] + ".";
+  //   conv.ask(session.lastPrompt);
+  // });  
 });
 
 app.intent('Thank You Intent', (conv) => {
