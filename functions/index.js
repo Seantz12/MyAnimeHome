@@ -109,17 +109,19 @@ app.intent('Description Intent', (conv, params) => {
     var sen = show.synopsis.split('.');
     session.lastPrompt = `Sure, here is synopsis for ${params.showName}. ` + sen[0] + ". " + sen[1] + ". If you want to hear more, say more.";
     conv.ask(session.lastPrompt);
-    context.setContext(conv, "description", 1, params);
+    context.setContext(conv, "description", 1, {synopsis: sen});
   });
 });
 
-app.intent('More Description Intent', (conv, params) => {
-  return (infoHelper.getShowId(conv.contexts.get("description").parameters.showName)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
-    let session = conv.data.mySession;
-    var sen = show.synopsis.split('.');
-    session.lastPrompt = `Sure, here is the rest of the synopsis. ` + sen[3] + ". " + sen[4] + ".";
-    conv.ask(session.lastPrompt);
-  });  
+app.intent('More Description Intent', (conv) => {
+  let session = conv.data.mySession;
+  var synop = conv.contexts.get("description").parameters.synopsis;
+  var len = synop.length;
+  session.lastPrompt = `Sure, here is the rest of the synopsis. `;
+  for(var i = 2; i < synop.length - 1; i++) {
+    session.lastPrompt += synop[i] + ". ";
+  }
+  conv.ask(session.lastPrompt);
 });
 
 app.intent('Thank You Intent', (conv) => {
