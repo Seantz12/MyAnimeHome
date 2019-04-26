@@ -101,6 +101,20 @@ app.intent('Rating Intent', (conv, params) => {
   });
 });
 
+app.intent('Setup MAL Account', (conv, params) => {
+  let session = conv.data.mySession;
+  try { 
+    return jikanjs.loadUser(params.username).then(() => {
+      conv.user.storage.username = params.username;
+      session.lastPrompt = `Ok! I've connected to your MyAnimeList account! You can now ask for information about yourself!`
+      conv.ask(session.lastPrompt);
+    });
+  } catch {
+    session.lastPrompt = "Sorry! That user doesn't exist, please try again.";
+    conv.ask(session.lastPrompt);
+  }
+});
+
 app.intent('Thank You Intent', (conv) => {
   let session = conv.data.mySession;
   session.lastPrompt = "You're welcome! How else can I help you?";
