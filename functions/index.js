@@ -95,10 +95,9 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
 });
 
 app.intent('Rating Intent', (conv, params) => {
-  return jikanjs.search('anime', params.showName).then((results) => {
+  return (infoHelper.getShowId(params.showName)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
     let session = conv.data.mySession;
-    var show = results.results[0];
-    session.lastPrompt = `The show ${show.title} has a rating of ${show.score}`;
+    session.lastPrompt = `The show ${show.title} has a rating of ${show.score}. It is ranked ${show.rank}`;
     conv.ask(session.lastPrompt);
   });
 });
@@ -123,6 +122,20 @@ app.intent('More Description Intent', (conv) => {
   }
   conv.ask(session.lastPrompt);
 });
+         
+app.intent('Setup MAL Account', (conv, params) => {
+  let session = conv.data.mySession;
+  try { 
+    return jikanjs.loadUser(params.username).then(() => {
+      conv.user.storage.username = params.username;
+      session.lastPrompt = `Ok! I've connected to your MyAnimeList account! You can now ask for information about yourself!`
+      conv.ask(session.lastPrompt);
+    });
+  } catch {
+    session.lastPrompt = "Sorry! That user doesn't exist, please try again.";
+    conv.ask(session.lastPrompt);
+  }
+});
 
 app.intent('Thank You Intent', (conv) => {
   let session = conv.data.mySession;
@@ -130,11 +143,8 @@ app.intent('Thank You Intent', (conv) => {
   conv.ask(session.lastPrompt);
 });
 
-
 app.intent('Goodbye', (conv) => {
   conv.close("Goodbye!");
 });
-
-
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
