@@ -6,6 +6,7 @@ const parse = require('./parseJSON');
 const dateHelper = require('./getDate');
 const infoHelper = require('./showInfo');
 const jikanjs = require('jikanjs');
+const context = require('./context');
 
 process.env.DEBUG = 'dialogflow:debug'; 
 
@@ -101,6 +102,27 @@ app.intent('Rating Intent', (conv, params) => {
   });
 });
 
+app.intent('Description Intent', (conv, params) => {
+  return (infoHelper.getShowId(params.showName)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
+    let session = conv.data.mySession;
+    var sen = show.synopsis.split('.');
+    session.lastPrompt = `Sure, here is synopsis for ${params.showName}. ` + sen[0] + ". " + sen[1] + ". If you want to hear more, say more.";
+    conv.ask(session.lastPrompt);
+    context.setContext(conv, "description", 1, {synopsis: sen});
+  });
+});
+
+app.intent('More Description Intent', (conv) => {
+  let session = conv.data.mySession;
+  var synop = conv.contexts.get("description").parameters.synopsis;
+  var len = synop.length;
+  session.lastPrompt = `Sure, here is the rest of the synopsis. `;
+  for(var i = 2; i < synop.length - 1; i++) {
+    session.lastPrompt += synop[i] + ". ";
+  }
+  conv.ask(session.lastPrompt);
+});
+         
 app.intent('Setup MAL Account', (conv, params) => {
   let session = conv.data.mySession;
   try { 
@@ -121,11 +143,8 @@ app.intent('Thank You Intent', (conv) => {
   conv.ask(session.lastPrompt);
 });
 
-
 app.intent('Goodbye', (conv) => {
   conv.close("Goodbye!");
 });
-
-
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
