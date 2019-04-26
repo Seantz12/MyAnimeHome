@@ -94,10 +94,9 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
 });
 
 app.intent('Rating Intent', (conv, params) => {
-  return jikanjs.search('anime', params.showName).then((results) => {
+  return (infoHelper.getShowId(params.showName)).then((showId) => jikanjs.loadAnime(showId)).then((show) => {
     let session = conv.data.mySession;
-    var show = results.results[0];
-    session.lastPrompt = `The show ${show.title} has a rating of ${show.score}`;
+    session.lastPrompt = `The show ${show.title} has a rating of ${show.score}. It is ranked ${show.rank}`;
     conv.ask(session.lastPrompt);
   });
 });
