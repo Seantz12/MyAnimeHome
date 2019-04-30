@@ -17,7 +17,7 @@ let setUpGlobals = (conv) => {
 };
 
 let setUpSession = (conv) => {
-    if (!conv.data.mySession) {
+    if(!conv.data.mySession) {
         let session = conv.data.mySession = {};
         session.numberOfPrompts = 0;
     }
@@ -29,8 +29,8 @@ let setUpSession = (conv) => {
 app.intent('Default Fallback Intent', (conv) => {
     let session = conv.data.mySession;
     repeatPhrase = "Sorry, I didn't catch that. Could you say that again?";
-    if (session.lastPrompt == repeatPhrase) {
-        if (session.numberOfPrompts == 1) {
+    if(session.lastPrompt == repeatPhrase) {
+        if(session.numberOfPrompts == 1) {
             conv.ask(session.lastPrompt);
             ++session.numberOfPrompts;
         } else {
@@ -89,8 +89,8 @@ app.intent('Top Anime This Season Intent', (conv, params) => {
     return jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason())
     .then((results) => {
         let session = conv.data.mySession;
-        if (params.number == '') params.number = 1;
-        if (params.number == 1) {
+        if(params.number == '') params.number = 1;
+        if(params.number == 1) {
             session.lastPrompt = 'The top anime this season is ';
         } else {
             session.lastPrompt = 
@@ -109,7 +109,7 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
     .then((showId) => jikanjs.loadAnime(showId))
     .then((show) => {
         let session = conv.data.mySession;
-        if (show.airing == false) {
+        if(show.airing == false) {
             session.lastPrompt = "This show isn't airing this season";
             conv.ask(session.lastPrompt);
         } else {
@@ -153,7 +153,7 @@ app.intent('More Description Intent', (conv) => {
     var synop = conv.contexts.get("description").parameters.synopsis;
     var len = synop.length;
     session.lastPrompt = `Sure, here is the rest of the synopsis. `;
-    for (var i = 2; i < synop.length - 1; i++) {
+    for(var i = 2; i < synop.length - 1; i++) {
         session.lastPrompt += synop[i] + ". ";
     }
     conv.ask(session.lastPrompt);
