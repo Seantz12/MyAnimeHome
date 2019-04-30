@@ -115,57 +115,32 @@ app.intent('When Is Anime Coming Out Intent', async (conv, params) => {
     }
 });
 
-
-// app.intent('When Is Anime Coming Out Intent', (conv, params) => {
-//     // TODO:
-//     // Setup try/catch for search paramter of less than three characters
-//     return (infoHelper.getShowId(params.showName))
-//     .then((showId) => jikanjs.loadAnime(showId))
-//     .then((show) => {
-//         let session = conv.data.mySession;
-//         if(show.airing == false) {
-//             session.lastPrompt = "This show isn't airing this season";
-//             conv.ask(session.lastPrompt);
-//         } else {
-//             var words = show.broadcast.split(" ");
-//             // Broadcast is returned as "day at ..." so day is the first word
-//             var day = words[0]; 
-//             session.lastPrompt = `In Japan, ${show.title} airs on ${day}`;
-//             conv.ask(session.lastPrompt);
-//         }
-//     });
-// });
-
-app.intent('Rating Intent', (conv, params) => {
-    return (infoHelper.getShowId(params.showName))
-    .then((showId) => jikanjs.loadAnime(showId))
-    .then((show) => {
-        let session = conv.data.mySession;
-        session.lastPrompt = 
-            `The show ${show.title} has a rating of ${show.score}.` +
-            `It is ranked ${show.rank}`;
-        conv.ask(session.lastPrompt);
-    });
+app.intent('Rating Intent', async (conv, params) => {
+    let showId = await infoHelper.getShowId(params.showName);
+    let show = await jikanjs.loadAnime(showId);
+    let session = conv.data.mySession;
+    session.lastPrompt = 
+        `The show ${show.title} has a rating of ${show.score}. ` +
+        `It is ranked ${show.rank}`;
+    conv.ask(session.lastPrompt);
 });
 
-app.intent('Description Intent', (conv, params) => {
-    return (infoHelper.getShowId(params.showName))
-    .then((showId) => jikanjs.loadAnime(showId))
-    .then((show) => {
-        let session = conv.data.mySession;
-        var sen = show.synopsis.split('.');
-        session.lastPrompt = 
-            `Sure, here is synopsis for ${params.showName}. ` + sen[0] + ". " + 
-            sen[1] + ". If you want to hear more, say more.";
-        conv.ask(session.lastPrompt);
-        context.setContext(conv, "description", 1, { synopsis: sen });
-    });
+app.intent('Description Intent', async (conv, params) => {
+    let showId = await infoHelper.getShowId(params.showName);
+    let show = await jikanjs.loadAnime(showId);
+    let session = conv.data.mySession;
+    var sen = show.synopsis.split('.');
+    session.lastPrompt = 
+        `Sure, here is the synopsis for ${show.title}. ` + sen[0] + ". " + 
+        sen[1] + ". If you want to hear the rest, say more.";
+    conv.ask(session.lastPrompt);
+    context.setContext(conv, "description", 1, { synopsis: sen });
 });
 
 app.intent('More Description Intent', (conv) => {
     let session = conv.data.mySession;
     var synop = conv.contexts.get("description").parameters.synopsis;
-    session.lastPrompt = `Sure, here is the rest of the synopsis. `;
+    session.lastPrompt = `Sure. `;
     for(var i = 2; i < synop.length - 1; i++) {
         session.lastPrompt += synop[i] + ". ";
     }
