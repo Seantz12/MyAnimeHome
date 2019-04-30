@@ -208,6 +208,35 @@ app.intent('Random PTW Show Intent', (conv) => {
     }
 });
 
+app.intent('Random Watching Show Intent', (conv) => {
+    let session = conv.data.mySession;
+    if(conv.user.storage.username == undefined) {
+        session.lastPrompt = 
+            "Sorry! You haven't setup an account yet. Use Google Assistant" +
+            " and type 'connect USERNAME' to connect your account!";
+        conv.ask(session.lastPrompt);
+    } else {
+        return jikanjs.loadUser(
+            conv.user.storage.username, 
+            "animelist", 
+            "watching"
+        ).then((results) => {
+            if(results.anime.length == 0) {
+                session.lastPrompt = 
+                    "You don't have any shows listed! Try adding some.";
+            } else {
+                var random = Math.round(
+                    Math.random() * (results.anime.length - 1)
+                );
+                var showName = results.anime[random]['title'];
+                session.lastPrompt =
+                    `Try continuing ${showName}!`;
+                conv.ask(session.lastPrompt);
+            }
+        });
+    }
+});
+
 /******************************************************************************/
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
