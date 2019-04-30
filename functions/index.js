@@ -7,6 +7,7 @@ const dateHelper = require('./getDate');
 const infoHelper = require('./showInfo');
 const jikanjs = require('jikanjs');
 const context = require('./context');
+const editDistanceHelper = require('fast-levenshtein');
 
 process.env.DEBUG = 'dialogflow:debug';
 
@@ -235,6 +236,42 @@ app.intent('Random Watching Show Intent', (conv) => {
             }
         });
     }
+});
+
+app.intent('Score of Show Intent', (conv, params) => {
+    let session = conv.data.mySession;
+    if(conv.user.storage.username == undefined) {
+        session.lastPrompt = 
+            "Sorry! You haven't setup an account yet. Use Google Assistant" +
+            " and type 'connect USERNAME' to connect your account!";
+        conv.ask(session.lastPrompt);
+        return;
+    }
+    return jikanjs.loadUser(
+        conv.user.storage.username, 
+        "animelist", 
+        "all"
+    ).then((results) => {
+        if(results.anime.length == 0) {
+            session.lastPrompt = 
+                "You don't have any shows listed! Try adding some.";
+        } else {
+            var closestMatch = undefined;
+            var closestShow = undefined;
+            results.anime.map((show) => {
+                var editDistance = 
+                    editDistanceHelper.get(show.title, params.showName);
+                if(editDistance < closestMatch || closestMatch == undefined) {
+                    closestMatch = editDistance;
+                    closestShow = show;
+                }
+            });
+            console.log(closestShow);
+            session.lastPrompt = 
+                `You gave ${closestShow.title} a score of ${closestShow.score}`;
+        }
+        conv.ask(session.lastPrompt);
+    });
 });
 
 /******************************************************************************/
