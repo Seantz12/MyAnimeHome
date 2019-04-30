@@ -47,7 +47,7 @@ app.intent('Default Welcome Intent', (conv) => {
     setUpGlobals(conv);
     let session = conv.data.mySession;
     session.lastPrompt = 
-        "Hi, I'm your Anime Home. I can tell you what anime is airing today." + 
+        "Hi, I'm your Anime Home. I can tell you what anime is airing today. " + 
         "How can I help you?";
     conv.ask(session.lastPrompt);
 });
@@ -150,16 +150,15 @@ app.intent('More Description Intent', (conv) => {
 /******************************************************************************/
 // User Account Intents
 
-app.intent('Setup MAL Account', (conv, params) => {
+app.intent('Setup MAL Account', async (conv, params) => {
     let session = conv.data.mySession;
     try {
-        return jikanjs.loadUser(params.username).then(() => {
-            conv.user.storage.username = params.username;
-            session.lastPrompt = 
-                "Ok! I've connected to your MyAnimeList account!" +
-                "You can now ask for information about yourself!"
-            conv.ask(session.lastPrompt);
-        });
+        await jikanjs.loadUser(params.username);
+        conv.user.storage.username = params.username;
+        session.lastPrompt = 
+            "Ok! I've connected to your MyAnimeList account!" +
+            "You can now ask for information about yourself!"
+        conv.ask(session.lastPrompt);
     } catch {
         session.lastPrompt = 
             "Sorry! That user doesn't exist, please try again.";
