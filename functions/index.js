@@ -97,24 +97,22 @@ app.intent('Top Anime This Season Intent', async (conv, params) => {
     conv.ask(session.lastPrompt);
 });
 
-app.intent('When Is Anime Coming Out Intent', (conv, params) => {
+app.intent('When Is Anime Coming Out Intent', async (conv, params) => {
     // TODO:
     // Setup try/catch for search paramter of less than three characters
-    return (infoHelper.getShowId(params.showName))
-    .then((showId) => jikanjs.loadAnime(showId))
-    .then((show) => {
-        let session = conv.data.mySession;
-        if(show.airing == false) {
-            session.lastPrompt = "This show isn't airing this season";
-            conv.ask(session.lastPrompt);
-        } else {
-            var words = show.broadcast.split(" ");
-            // Broadcast is returned as "day at ..." so day is the first word
-            var day = words[0]; 
-            session.lastPrompt = `In Japan, ${show.title} airs on ${day}`;
-            conv.ask(session.lastPrompt);
-        }
-    });
+    let showId = await infoHelper.getShowId(params.showName);
+    let show = await jikanjs.loadAnime(showId);
+    let session = conv.data.mySession;
+    if(show.airing == false) {
+        session.lastPrompt = "This show isn't airing this season";
+        conv.ask(session.lastPrompt);
+    } else {
+        var words = show.broadcast.split(" ");
+        // Broadcast is returned as "day at ..." so day is the first word
+        var day = words[0]; 
+        session.lastPrompt = `In Japan, ${show.title} airs on ${day}`;
+        conv.ask(session.lastPrompt);
+    }
 });
 
 
