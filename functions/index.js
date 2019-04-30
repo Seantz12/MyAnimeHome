@@ -156,7 +156,7 @@ app.intent('Setup MAL Account', async (conv, params) => {
         await jikanjs.loadUser(params.username);
         conv.user.storage.username = params.username;
         session.lastPrompt = 
-            "Ok! I've connected to your MyAnimeList account!" +
+            "Ok! I've connected to your MyAnimeList account! " +
             "You can now ask for information about yourself!"
         conv.ask(session.lastPrompt);
     } catch {
