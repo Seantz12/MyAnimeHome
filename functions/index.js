@@ -1,7 +1,6 @@
 const { dialogflow } = require('actions-on-google');
 const functions = require('firebase-functions');
 const app = dialogflow();
-const api = require('./apiCall');
 const parse = require('./parseJSON');
 const dateHelper = require('./getDate');
 const infoHelper = require('./showInfo');
@@ -71,35 +70,31 @@ app.intent('Goodbye', (conv) => {
 /******************************************************************************/
 // Anime Description Intents
 
-app.intent('Anime Anyday Intent', (conv, params) => {
+app.intent('Anime Anyday Intent', async (conv, params) => {
     // TODO:
     // If param.sdate is not defined, then will cause error as day is undefined
     // Change airing to be the day (ex. Should say "Tomorrow we are...")
-    return jikanjs.loadSchedule(dateHelper.getWeekday(params.date))
-    .then((results) => {
-        let session = conv.data.mySession;
-        session.lastPrompt = 
-            "Today we are airing " + 
-            parse.getShowsOnDate(params.date, results) + ".";
-        conv.ask(session.lastPrompt);
-    });
+    let result = await jikanjs.loadSchedule(dateHelper.getWeekday(params.date));
+    let session = conv.data.mySession;
+    session.lastPrompt = 
+        "Today we're airing " + parse.getShowsOnDate(params.date, result) + ".";
+    conv.ask(session.lastPrompt);
 });
 
-app.intent('Top Anime This Season Intent', (conv, params) => {
-    return jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason())
-    .then((results) => {
-        let session = conv.data.mySession;
-        if(params.number == '') params.number = 1;
-        if(params.number == 1) {
-            session.lastPrompt = 'The top anime this season is ';
-        } else {
-            session.lastPrompt = 
-                `The top ${params.number} anime this season are: `;
-        }
-        session.lastPrompt += 
-            parse.getShowsOnSeason(params.number, results) + ".";
-        conv.ask(session.lastPrompt);
-    });
+app.intent('Top Anime This Season Intent', async (conv, params) => {
+    let result = 
+        await jikanjs.loadSeason(dateHelper.getYear(), dateHelper.getSeason());
+    let session = conv.data.mySession;
+    if(params.number == '') params.number = 1;
+    if(params.number == 1) {
+        session.lastPrompt = 'The top anime this season is ';
+    } else {
+        session.lastPrompt = 
+            `The top ${params.number} anime this season are: `;
+    }
+    session.lastPrompt += 
+        parse.getShowsOnSeason(params.number, result) + ".";
+    conv.ask(session.lastPrompt);
 });
 
 app.intent('When Is Anime Coming Out Intent', (conv, params) => {
@@ -121,6 +116,27 @@ app.intent('When Is Anime Coming Out Intent', (conv, params) => {
         }
     });
 });
+
+
+// app.intent('When Is Anime Coming Out Intent', (conv, params) => {
+//     // TODO:
+//     // Setup try/catch for search paramter of less than three characters
+//     return (infoHelper.getShowId(params.showName))
+//     .then((showId) => jikanjs.loadAnime(showId))
+//     .then((show) => {
+//         let session = conv.data.mySession;
+//         if(show.airing == false) {
+//             session.lastPrompt = "This show isn't airing this season";
+//             conv.ask(session.lastPrompt);
+//         } else {
+//             var words = show.broadcast.split(" ");
+//             // Broadcast is returned as "day at ..." so day is the first word
+//             var day = words[0]; 
+//             session.lastPrompt = `In Japan, ${show.title} airs on ${day}`;
+//             conv.ask(session.lastPrompt);
+//         }
+//     });
+// });
 
 app.intent('Rating Intent', (conv, params) => {
     return (infoHelper.getShowId(params.showName))
@@ -151,7 +167,6 @@ app.intent('Description Intent', (conv, params) => {
 app.intent('More Description Intent', (conv) => {
     let session = conv.data.mySession;
     var synop = conv.contexts.get("description").parameters.synopsis;
-    var len = synop.length;
     session.lastPrompt = `Sure, here is the rest of the synopsis. `;
     for(var i = 2; i < synop.length - 1; i++) {
         session.lastPrompt += synop[i] + ". ";
