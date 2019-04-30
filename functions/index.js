@@ -23,6 +23,9 @@ let setUpSession = (conv) => {
   }
 };
 
+/******************************************************************************/
+// Generic Intents
+
 app.intent('Default Fallback Intent', (conv) => {
   let session = conv.data.mySession;
   if (session.lastPrompt == "Sorry I didn't catch that, could you try saying that again?") {
@@ -51,6 +54,19 @@ app.intent('Repeat Intent', (conv) => {
   let session = conv.data.mySession;
   conv.ask("Sorry, let me repeat that. " + session.lastPrompt);
 });
+
+app.intent('Thank You Intent', (conv) => {
+  let session = conv.data.mySession;
+  session.lastPrompt = "You're welcome! How else can I help you?";
+  conv.ask(session.lastPrompt);
+});
+
+app.intent('Goodbye', (conv) => {
+  conv.close("Goodbye!");
+});
+
+/******************************************************************************/
+// Anime Description Intents
 
 app.intent('Anime Anyday Intent', (conv, params) => {
   // TODO:
@@ -122,6 +138,9 @@ app.intent('More Description Intent', (conv) => {
   }
   conv.ask(session.lastPrompt);
 });
+
+/******************************************************************************/
+// User Account Intents
          
 app.intent('Setup MAL Account', (conv, params) => {
   let session = conv.data.mySession;
@@ -135,16 +154,6 @@ app.intent('Setup MAL Account', (conv, params) => {
     session.lastPrompt = "Sorry! That user doesn't exist, please try again.";
     conv.ask(session.lastPrompt);
   }
-});
-
-app.intent('Thank You Intent', (conv) => {
-  let session = conv.data.mySession;
-  session.lastPrompt = "You're welcome! How else can I help you?";
-  conv.ask(session.lastPrompt);
-});
-
-app.intent('Goodbye', (conv) => {
-  conv.close("Goodbye!");
 });
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
