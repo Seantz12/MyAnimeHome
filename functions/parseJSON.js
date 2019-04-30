@@ -4,21 +4,27 @@ function getShowsOnDate(date, file) {
     var day = dateHelper.getWeekday(date);
     var len = file[day].length;
     var dateList = "";
-    for(var i = 0; i < len - 1; i++) {
-        dateList += file[day][i]["title"] + ", ";
+    if(len != 1) {
+        for(var i = 0; i < len - 1; i++) {
+            dateList += file[day][i]["title"] + ", ";
+        }
+        dateList += "and ";
     }
-    dateList += "and " + file[day][len - 1]["title"];
+    dateList += file[day][len-1]["title"];
     return dateList;
 }
 
 function getShowsOnSeason(number, file) {
     animeList = file.anime;
     animeList.sort((a, b) => (a.score > b.score) ? -1 : 1);
-    var animeToSay = ""
-    for(var i = 0; i < number-1; i++) {
-      animeToSay += animeList[i]['title'] + ", "
+    var animeToSay = "";
+    if(number != 1) {
+        for(var i = 0; i < number - 1; i++) {
+            animeToSay += animeList[i]['title'] + ", "
+        }
+        animeToSay += 'and ';
     }
-    animeToSay += 'and ' + animeList[number-1]['title'];
+    animeToSay += animeList[number-1]['title'];
     return animeToSay;
 }
 
