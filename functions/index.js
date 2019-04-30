@@ -179,4 +179,6 @@ app.intent('Setup MAL Account', (conv, params) => {
     }
 });
 
+/******************************************************************************/
+
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
